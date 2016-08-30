@@ -41,7 +41,7 @@ module GovukElementsFormBuilder
     end
 
     def radio_button_fieldset attribute, options={}
-      content_tag :fieldset, fieldset_options(options) do
+      content_tag :fieldset, fieldset_options(options,attribute) do
         safe_join([
           fieldset_legend(attribute),
           radio_inputs(attribute, options)
@@ -50,7 +50,7 @@ module GovukElementsFormBuilder
     end
 
     def check_box_fieldset legend_key, attributes
-      content_tag :fieldset, fieldset_options(options) do
+      content_tag :fieldset, fieldset_options(options, attributes) do
         safe_join([
           fieldset_legend(legend_key),
           check_box_inputs(attributes)
@@ -107,17 +107,23 @@ module GovukElementsFormBuilder
     end
 
     def fieldset_legend attribute
-      legend = content_tag(:legend, fieldset_text(attribute), class: 'heading-medium')
+      legend = content_tag(:legend, fieldset_text(attribute), class: "heading-medium")
       add_hint :legend, legend, attribute
       legend.html_safe
     end
 
-    def fieldset_options options
+    def fieldset_options attributes, options
       fieldset_options = {}
-      fieldset_options[:class] = 'inline' if options[:inline] == true
+      fieldset_options[:class] = fieldset_classes attributes, options
       fieldset_options
     end
 
+    def fieldset_classes attributes, options
+      classes = ''
+      classes = 'error' if error_for? attributes
+      classes += ' inline' if options[:inline] == true
+      classes
+    end
     def add_error_to_html_tag! html_tag
       case html_tag
       when /^<label/
@@ -126,6 +132,8 @@ module GovukElementsFormBuilder
         add_error_to_input! html_tag, 'input'
       when /^<textarea/
         add_error_to_input! html_tag, 'textarea'
+      when /^<fieldset/
+        add_error_to_input! html_tag
       else
         html_tag
       end
