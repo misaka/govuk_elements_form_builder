@@ -284,6 +284,31 @@ RSpec.describe GovukElementsFormBuilder::FormBuilder do
       ]
     end
 
+    it 'outputs error messages' do
+      resource.valid?
+      output = builder.radio_button_fieldset :has_user_account
+      expect_equal output, [
+          '<fieldset class="error-summary">',
+          '<legend class="heading-medium">',
+          '<span class="form-label-bold">',
+          'Do you already have a personal user account?',
+          '</span>',
+          '<span class="error-message">',
+          'Please select an option.',
+          '</span>',
+          '</legend>',
+          '<label class="block-label" for="person_has_user_account_yes">',
+          '<input type="radio" value="yes" name="person[has_user_account]" id="person_has_user_account_yes" />',
+          'Yes',
+          '</label>',
+          '<label class="block-label" for="person_has_user_account_no">',
+          '<input type="radio" value="no" name="person[has_user_account]" id="person_has_user_account_no" />',
+          'No',
+          '</label>',
+          '</fieldset>'
+      ]
+    end
+
   end
 
   describe '#check_box_fieldset' do
