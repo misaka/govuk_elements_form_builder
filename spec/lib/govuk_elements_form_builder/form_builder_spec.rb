@@ -285,27 +285,35 @@ RSpec.describe GovukElementsFormBuilder::FormBuilder do
     end
 
     it 'outputs error messages' do
+      resource.contact_method = ContactMethod.new
       resource.valid?
-      output = builder.radio_button_fieldset :has_user_account
+
+      #output = builder.fields_for(:waste_transport) do |f|
+       # f.check_box_fieldset :waste_transport, [:animal_carcasses, :mines_quarries, :farm_agricultural]
+      #end
+
+      output = builder.radio_button_fieldset :contact_method
       expect_equal output, [
-          '<fieldset class="error-summary">',
+          '<div class="form-group error">',
+          '<fieldset>',
           '<legend class="heading-medium">',
           '<span class="form-label-bold">',
-          'Do you already have a personal user account?',
+          'Which email address should we use??',
           '</span>',
           '<span class="error-message">',
           'Please select an option.',
           '</span>',
           '</legend>',
-          '<label class="block-label" for="person_has_user_account_yes">',
-          '<input type="radio" value="yes" name="person[has_user_account]" id="person_has_user_account_yes" />',
+          '<label class="block-label" for="person_contact_method">',
+          '<input type="radio" value="yes" name="person[contact_method]" id="person_contact_yes" />',
           'Yes',
           '</label>',
           '<label class="block-label" for="person_has_user_account_no">',
           '<input type="radio" value="no" name="person[has_user_account]" id="person_has_user_account_no" />',
           'No',
           '</label>',
-          '</fieldset>'
+          '</fieldset>',
+          '</div>'
       ]
     end
 

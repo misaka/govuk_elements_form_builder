@@ -2,6 +2,7 @@ class Person
   include ActiveModel::Model
 
   attr_accessor :address
+  attr_accessor :contact_method
   attr_accessor :email_work
   attr_accessor :email_home
   attr_accessor :has_user_account
@@ -13,7 +14,7 @@ class Person
   attr_accessor :waste_transport
   attr_accessor :gender
 
-  validates_presence_of :name, :gender
+  validates_presence_of :name
 
   def address_attributes=(attributes)
     @address = Address.new(attributes)
@@ -22,4 +23,9 @@ class Person
   def waste_transport_attributes=(attributes)
     @waste_transport = WasteTransport.new(attributes)
   end
+
+  def contact_method_attributes=(attributes)
+    @contact_method = ContactMethod.new(attributes)
+  end
+
 end
