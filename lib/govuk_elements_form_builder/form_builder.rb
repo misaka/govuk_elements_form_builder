@@ -41,21 +41,26 @@ module GovukElementsFormBuilder
     end
 
     def radio_button_fieldset attribute, options={}
-      content_tag :fieldset, fieldset_options(options,attribute) do
+      fieldset = content_tag :fieldset, fieldset_options(attribute, options) do
         safe_join([
           fieldset_legend(attribute),
           radio_inputs(attribute, options)
         ], "\n")
       end
+
+      content_tag(:div, fieldset, class:"form-group error") if error_for? attribute
+
     end
 
-    def check_box_fieldset legend_key, attributes
-      content_tag :fieldset, fieldset_options(options, attributes) do
+    def check_box_fieldset legend_key, attributes, options={}
+      fieldset = content_tag :fieldset, fieldset_options(attributes, options) do
         safe_join([
-          fieldset_legend(legend_key),
-          check_box_inputs(attributes)
-        ], "\n")
+                      fieldset_legend(legend_key),
+                      check_box_inputs(attributes)
+                  ], "\n")
       end
+      fieldset = content_tag(:div, fieldset, class:"form-group error") if error_for? attributes
+      fieldset
     end
 
     def collection_select method, collection, value_method, text_method, options = {}, *args
@@ -113,15 +118,16 @@ module GovukElementsFormBuilder
     end
 
     def fieldset_options attributes, options
+      css_class = fieldset_classes attributes, options
       fieldset_options = {}
-      fieldset_options[:class] = fieldset_classes attributes, options
+      fieldset_options[:class] = css_class if css_class.present?
       fieldset_options
     end
 
     def fieldset_classes attributes, options
       classes = ''
       classes = 'error' if error_for? attributes
-      classes += ' inline' if options[:inline] == true
+      classes += 'inline' if options[:inline] == true
       classes
     end
     def add_error_to_html_tag! html_tag
